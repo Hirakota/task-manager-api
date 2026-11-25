@@ -1,6 +1,5 @@
 package com.aspet.task_manager.features.comment.domain;
 
-import com.aspet.task_manager.features.project.domain.ProjectEntity;
 import com.aspet.task_manager.features.task.domain.TaskEntity;
 import com.aspet.task_manager.features.user.domain.UserEntity;
 import jakarta.persistence.*;
@@ -23,7 +22,7 @@ public class CommentEntity {
     @Column(length = 1000, nullable = false)
     private String text;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "author_user_id", nullable = false)
     private UserEntity author;
 
@@ -36,6 +35,6 @@ public class CommentEntity {
 
     @PrePersist
     void onCreate() {
-        if(createdAt == null) createdAt = LocalDateTime.now();
+        if (createdAt == null) createdAt = LocalDateTime.now();
     }
 }

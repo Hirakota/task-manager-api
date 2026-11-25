@@ -1,14 +1,16 @@
 package com.aspet.task_manager.features.project.controller;
 
+import com.aspet.task_manager.common.dto.PageResponse;
 import com.aspet.task_manager.features.project.dto.request.ProjectCreateRequestDto;
 import com.aspet.task_manager.features.project.dto.request.ProjectUpdateRequestDto;
 import com.aspet.task_manager.features.project.dto.response.ProjectResponseDto;
 import com.aspet.task_manager.features.project.dto.response.ProjectSummaryResponseDto;
 import com.aspet.task_manager.features.project.service.ProjectService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -28,33 +30,34 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProjectSummaryResponseDto>> getAll(@PageableDefault(size = 20, sort = "name") Pageable pageable) {
+    public ResponseEntity<PageResponse<ProjectSummaryResponseDto>> getAll(@ParameterObject @PageableDefault(size = 20, sort = "name") Pageable pageable) {
         return ResponseEntity.ok(projectService.getAll(pageable));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProjectResponseDto> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(projectService.getById(id));
+    @GetMapping("/{projectId}")
+    public ResponseEntity<ProjectResponseDto> getById(@PathVariable Long projectId) {
+        return ResponseEntity.ok(projectService.getById(projectId));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProjectResponseDto> update(@PathVariable Long id, @RequestBody @Valid ProjectUpdateRequestDto dto) {
-        return ResponseEntity.ok(projectService.update(id, dto));
+    @PutMapping("/{projectId}")
+    @Operation(description = "Update project name and description")
+    public ResponseEntity<ProjectResponseDto> update(@PathVariable Long projectId, @RequestBody @Valid ProjectUpdateRequestDto dto) {
+        return ResponseEntity.ok(projectService.update(projectId, dto));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        projectService.delete(id);
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<Void> delete(@PathVariable Long projectId) {
+        projectService.delete(projectId);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{id}/members/{userId}")
-    public ResponseEntity<ProjectResponseDto> addMember(@PathVariable Long id, @PathVariable Long userId) {
-        return ResponseEntity.ok(projectService.addMember(id, userId));
+    @PostMapping("/{projectId}/members/{userId}")
+    public ResponseEntity<ProjectResponseDto> addMember(@PathVariable Long projectId, @PathVariable Long userId) {
+        return ResponseEntity.ok(projectService.addMember(projectId, userId));
     }
 
-    @DeleteMapping("/{id}/members/{userId}")
-    public ResponseEntity<ProjectResponseDto> removeMember(@PathVariable Long id, @PathVariable Long userId) {
-        return ResponseEntity.ok(projectService.removeMember(id, userId));
+    @DeleteMapping("/{projectId}/members/{userId}")
+    public ResponseEntity<ProjectResponseDto> removeMember(@PathVariable Long projectId, @PathVariable Long userId) {
+        return ResponseEntity.ok(projectService.removeMember(projectId, userId));
     }
 }

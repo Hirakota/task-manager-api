@@ -1,5 +1,6 @@
 package com.aspet.task_manager.features.project.service;
 
+import com.aspet.task_manager.common.dto.PageResponse;
 import com.aspet.task_manager.common.exceptions.AlreadyExistException;
 import com.aspet.task_manager.common.exceptions.BadRequestException;
 import com.aspet.task_manager.common.exceptions.NotFoundException;
@@ -13,7 +14,6 @@ import com.aspet.task_manager.features.project.repository.ProjectRepository;
 import com.aspet.task_manager.features.user.domain.UserEntity;
 import com.aspet.task_manager.features.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,7 +101,7 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProjectSummaryResponseDto> getAll(Pageable pageable) {
-        return projectRepository.findAll(pageable).map(ProjectMapper::mapToSummaryDto);
+    public PageResponse<ProjectSummaryResponseDto> getAll(Pageable pageable) {
+        return PageResponse.of(projectRepository.findAll(pageable), ProjectMapper::mapToSummaryDto);
     }
 }

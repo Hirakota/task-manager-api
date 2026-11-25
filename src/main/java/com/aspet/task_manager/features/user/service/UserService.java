@@ -1,5 +1,6 @@
 package com.aspet.task_manager.features.user.service;
 
+import com.aspet.task_manager.common.dto.PageResponse;
 import com.aspet.task_manager.common.exceptions.AlreadyExistException;
 import com.aspet.task_manager.common.exceptions.NotFoundException;
 import com.aspet.task_manager.features.user.adapter.UserMapper;
@@ -9,7 +10,6 @@ import com.aspet.task_manager.features.user.dto.request.UserPatchRequestDto;
 import com.aspet.task_manager.features.user.dto.response.UserResponseDto;
 import com.aspet.task_manager.features.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +32,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserResponseDto> getAll(Pageable pageable) {
-        return userRepository.findAll(pageable).map(UserMapper::mapToDto);
+    public PageResponse<UserResponseDto> getAll(Pageable pageable) {
+        return PageResponse.of(userRepository.findAll(pageable), UserMapper::mapToDto);
     }
 
     @Transactional(readOnly = true)
